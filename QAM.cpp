@@ -116,7 +116,7 @@ public:
     }
 };
 
-class Chanal {
+class Channel {
 private:
     RandomGenerator rng;
 
@@ -215,7 +215,7 @@ void simulate_qam(int p, int test_points, const std::vector<double>& gamma_db) {
     int N = 1000;
 
     QAMModulator modulator(p, T, N, I);
-    Chanal chanal;
+    Channel channel;
     QAMDemodulator demodulator(p);
 
     std::vector<double> pe(gamma_db.size(), 0.0);
@@ -234,7 +234,7 @@ void simulate_qam(int p, int test_points, const std::vector<double>& gamma_db) {
 
             double x, y;
             modulator.calculate_constellation(signal, time, x, y);
-            chanal.add_noise(x, y, gamma);
+            channel.add_noise(x, y, gamma);
 
             int received = demodulator.demodulate(x, y);
 
