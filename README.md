@@ -54,7 +54,16 @@ x и y - координаты сигнальной точки
 Pатем создаётся gnuplot скрипт plot_script.
 Если запустить этот скрипт то появится png файл DispPError в котором будет находится график зависимости вероятности ошибки бита от коэфициэнта сигнал-шум.
 
-пример работы 
+пример работы после запуска gnuplot скрипта
 p = 0
 ![DispPError4](https://github.com/user-attachments/assets/2de69528-2c6d-4855-8410-0c317ebe0359)
+p = 1
+![DispPError16](https://github.com/user-attachments/assets/42201586-1f27-4b49-8ef0-ca3c6dbd9312)
+p = 2
+![DispPError64](https://github.com/user-attachments/assets/3b2ed13c-08cc-4cce-818a-6b91ef8da15e)
+p = 3
+![DispPError256](https://github.com/user-attachments/assets/7ddcace4-0832-46cf-9c65-8664235190cc)
+
+
+
 
