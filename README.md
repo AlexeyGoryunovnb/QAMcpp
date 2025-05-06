@@ -1,5 +1,5 @@
 # QAMcpp
-в данной программе есть три важных класса QAMModulator, Chanal и QAMDemodulator.
+в данной программе есть три важных класса QAMModulator, Channel и QAMDemodulator.
 
 
 1) QAMModulator
@@ -25,7 +25,7 @@ time - время t.
 x и y - координаты сигнальной точки
 
 
-2) Chanal
+2) Channel
 В этом класе происходит моделирование канала по средством добавления шума.
 
 void add_noise(x, y, gamma)
