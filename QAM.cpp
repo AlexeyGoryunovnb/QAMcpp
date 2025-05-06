@@ -102,6 +102,7 @@ public:
             signal[i] = x_val * std::sqrt(2.0 / T) * std::cos(2 * Pi * f0 * t) +
                 y_val * std::sqrt(2.0 / T) * std::sin(2 * Pi * f0 * t);
         }
+
     }
 
     void calculate_constellation(const std::vector<double>& signal, const std::vector<double>& time, double& x, double& y) {
@@ -122,7 +123,7 @@ private:
 
 public:
     void add_noise(double& x, double& y, double gamma) {
-        double noise_std = std::sqrt(1.0 / (2.0 * gamma));
+        double noise_std = std::sqrt(1 / (2 * gamma));
         x += rng.rand_normal() * noise_std;
         y += rng.rand_normal() * noise_std;
     }
@@ -189,18 +190,18 @@ public:
     }
 };
 
-void plot_results(const std::vector<double>& gamma_db, const std::vector<double>& pe) {
+void plot_results(const std::vector<double>& D_db, const std::vector<double>& pe) {
     std::ofstream datafile("qam_results.dat");
-    for (size_t i = 0; i < gamma_db.size(); ++i) {
-        datafile << gamma_db[i] << " " << pe[i] << "\n";
+    for (size_t i = 0; i < D_db.size(); ++i) {
+        datafile << D_db[i] << " " << pe[i] << "\n";
     }
     datafile.close();
 
     std::ofstream plotfile("plot_script.gp");
     plotfile << "set terminal pngcairo enhanced font 'arial,10' fontscale 1.0 size 700, 500\n";
-    plotfile << "set output 'SNRPError.png'\n";
-    plotfile << "set title 'SNR vs Bit Error Probability for QAM'\n";
-    plotfile << "set xlabel 'SNR (dB)'\n";
+    plotfile << "set output 'DispPError.png'\n";
+    plotfile << "set title 'D vs Bit Error Probability for QAM'\n";
+    plotfile << "set xlabel 'D (dB)'\n";
     plotfile << "set ylabel 'Bit Error Probability'\n";
     plotfile << "set logscale y\n";
     plotfile << "set grid\n";
@@ -209,7 +210,7 @@ void plot_results(const std::vector<double>& gamma_db, const std::vector<double>
     plotfile.close();
 }
 
-void simulate_qam(int p, int test_points, const std::vector<double>& gamma_db) {
+void simulate_qam(int p, int test_points, const std::vector<double>& D_db) {
     double T = 0.5;
     int I = 10;
     int N = 1000;
@@ -218,11 +219,12 @@ void simulate_qam(int p, int test_points, const std::vector<double>& gamma_db) {
     Channel channel;
     QAMDemodulator demodulator(p);
 
-    std::vector<double> pe(gamma_db.size(), 0.0);
+    std::vector<double> pe(D_db.size(), 0.0);
     RandomGenerator rng;
 
-    for (size_t j = 0; j < gamma_db.size(); ++j) {
-        double gamma = db_to_linear(gamma_db[j]);
+    for (size_t j = 0; j < D_db.size(); ++j) {
+        double D = db_to_linear(D_db[j]);
+        double gamma = 1 / (2 * D);
         int error_count = 0;
 
         for (int i = 0; i < test_points; ++i) {
@@ -251,19 +253,19 @@ void simulate_qam(int p, int test_points, const std::vector<double>& gamma_db) {
         pe[j] = static_cast<double>(error_count) / (test_points * (p + 1) * 2);
     }
 
-    plot_results(gamma_db, pe);
+    plot_results(D_db, pe);
 }
 
 int main() {
     int p = 1;
     int Test = 1000;
 
-    std::vector<double> gamma_db;
-    for (double g = -20.0; g <= 10.0; g += 1) {
-        gamma_db.push_back(g);
+    std::vector<double> D_db;
+    for (double g = -15.0; g <= 15.0; g += 1) {
+        D_db.push_back(g);
     }
 
-    simulate_qam(p, Test, gamma_db);
+    simulate_qam(p, Test, D_db);
 
     std::cout << "plot_script created";
 
