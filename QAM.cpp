@@ -65,7 +65,7 @@ public:
         return q;
     }
 
-    void modulate(int n, std::vector<double>& signal, std::vector<double>& time, double& x, double& y) {
+    void modulate(int n, std::vector<double>& signal, std::vector<double>& time) {
         time.resize(static_cast<int>(T / dt));
         for (size_t i = 0; i < time.size(); ++i) {
             time[i] = i * dt;
@@ -102,9 +102,6 @@ public:
             signal[i] = x_val * std::sqrt(2.0 / T) * std::cos(2 * Pi * f0 * t) +
                 y_val * std::sqrt(2.0 / T) * std::sin(2 * Pi * f0 * t);
         }
-
-        x = x_val;
-        y = y_val;
     }
 
     void calculate_constellation(const std::vector<double>& signal, const std::vector<double>& time, double& x, double& y) {
@@ -233,14 +230,13 @@ void simulate_qam(int p, int test_points, const std::vector<double>& gamma_db) {
 
             std::vector<double> signal;
             std::vector<double> time;
+            modulator.modulate(symbol, signal, time);
+
             double x, y;
-            modulator.modulate(symbol, signal, time, x, y);
+            modulator.calculate_constellation(signal, time, x, y);
+            chanal.add_noise(x, y, gamma);
 
-            double x2, y2;
-            modulator.calculate_constellation(signal, time, x2, y2);
-            chanal.add_noise(x2, y2, gamma);
-
-            int received = demodulator.demodulate(x2, y2);
+            int received = demodulator.demodulate(x, y);
 
             std::vector<int> tx_bits = int_to_bits(symbol, (p + 1) * 2);
             std::vector<int> rx_bits = int_to_bits(received, (p + 1) * 2);
