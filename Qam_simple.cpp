@@ -162,18 +162,18 @@ public:
     }
 };
 
-void plot_results(const std::vector<double>& D_db, const std::vector<double>& pe, int p) {
+void plot_results(const std::vector<double>& SNR_db, const std::vector<double>& pe, int p) {
     std::ofstream datafile("qam_results.dat");
-    for (size_t i = 0; i < D_db.size(); ++i) {
-        datafile << D_db[i] << " " << pe[i] << "\n";
+    for (size_t i = 0; i < SNR_db.size(); ++i) {
+        datafile << SNR_db[i] << " " << pe[i] << "\n";
     }
     datafile.close();
 
     std::ofstream plotfile("plot_script.gp");
     plotfile << "set terminal pngcairo enhanced font 'arial,10' fontscale 1.0 size 700, 500\n";
     plotfile << "set output 'DispPError.png'\n";
-    plotfile << "set title 'D vs Bit Error Probability for QAM (p=" << p << ")'\n";
-    plotfile << "set xlabel 'D (dB)'\n";
+    plotfile << "set title 'SNR vs Bit Error Probability for QAM (p=" << p << ")'\n";
+    plotfile << "set xlabel 'SNR (dB)'\n";
     plotfile << "set ylabel 'Bit Error Probability'\n";
     plotfile << "set logscale y\n";
     plotfile << "set grid\n";
@@ -182,26 +182,25 @@ void plot_results(const std::vector<double>& D_db, const std::vector<double>& pe
 
     if (p == 0) {
         
-        plotfile << "     0.5*erfc(sqrt(0.5/(10**(x/10)))) title 'Theoretical BER (p=0)'\n";
+        plotfile << "     0.5*erfc(sqrt(10**(x/10))) title 'Theoretical BER (p=0)'\n";
     }
     else {
-        plotfile << "     " << (std::pow(2, p + 1) - 1) << "*erfc(sqrt(0.5/(10**(x/10))))*(2**(" << p << "+1)-" << (std::pow(2, p + 1) - 1) << "*erfc(sqrt(0.5/(10**(x/10))))/2)/(4**" << (p + 1) << ") title 'Theoretical Upper Bound', \\\n";
-        plotfile << "     " << (std::pow(2, p + 1) - 1) << "*erfc(sqrt(0.5/(10**(x/10))))*(2**(" << p << "+1)-" << (std::pow(2, p + 1) - 1) << "*erfc(sqrt(0.5/(10**(x/10))))/2)/(4**" << (p + 1) << ")/" << (p + 1) << " title 'Theoretical Lower Bound', \\\n";
+        plotfile << "     " << (std::pow(2, p + 1) - 1) << "*erfc(sqrt(10**(x/10)))*(2**(" << p << "+1)-" << (std::pow(2, p + 1) - 1) << "*erfc(sqrt(10**(x/10)))/2)/(4**" << (p + 1) << ") title 'Theoretical Upper Bound', \\\n";
+        plotfile << "     " << (std::pow(2, p + 1) - 1) << "*erfc(sqrt(10**(x/10)))*(2**(" << p << "+1)-" << (std::pow(2, p + 1) - 1) << "*erfc(sqrt(10**(x/10)))/2)/(4**" << (p + 1) << ")/" << (p + 1) << " title 'Theoretical Lower Bound', \\\n";
     }
     plotfile.close();
 }
 
-void simulate_qam(int p, int test_points, const std::vector<double>& D_db) {
+void simulate_qam(int p, int test_points, const std::vector<double>& SNR_db) {
     QAMModulator_simple modulator(p);
     Channel channel;
     QAMDemodulator demodulator(p);
 
-    std::vector<double> pe(D_db.size(), 0.0);
+    std::vector<double> pe(SNR_db.size(), 0.0);
     RandomGenerator rng;
 
-    for (size_t j = 0; j < D_db.size(); ++j) {
-        double D = db_to_linear(D_db[j]);
-        double gamma = 1 / (2 * D);
+    for (size_t j = 0; j < SNR_db.size(); ++j) {
+        double gamma = db_to_linear(SNR_db[j]);
         int error_count = 0;
 
         for (int i = 0; i < test_points; ++i) {
@@ -224,19 +223,19 @@ void simulate_qam(int p, int test_points, const std::vector<double>& D_db) {
         }
         pe[j] = static_cast<double>(error_count) / (test_points * (p + 1) * 2);
     }
-    plot_results(D_db, pe, p);
+    plot_results(SNR_db, pe, p);
 }
 
 int main() {
     int p = 3;
     int Test = 10000;
 
-    std::vector<double> D_db;
+    std::vector<double> SNR_db;
     for (double g = -15.0; g <= 15.0; g += 0.2) {
-        D_db.push_back(g);
+        SNR_db.push_back(g);
     }
 
-    simulate_qam(p, Test, D_db);
+    simulate_qam(p, Test, SNR_db);
     std::cout << "plot_script created";
     return 0;
 }
