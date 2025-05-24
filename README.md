@@ -91,15 +91,16 @@ Pатем создаётся gnuplot скрипт plot_script, в gnuplot скр
 границы. Обе границы считаются на основе вероятности ошибки символа. При вычислении верхняей границы мы считаем что при ошибки символа, произходит ошибка в половине
 битов. При вычислении нижней границы мы считаем что при ошибки символа, произходит ошибка в одном бите. Для QPSK, так как используется всего два бита, ошибка в
 половине битов и ошибка в одном бите совподают.
-Если запустить скрипт plot_script то появится png файл DispPError в котором будет находится эксперементальный график зависимости вероятности ошибки бита от дисперсии
-шума. И теоретические графики.
+Если запустить скрипт plot_script то появится png файл DispPError в котором будет находится эксперементальный график зависимости вероятности ошибки бита от
+коэффициента сигнал-шум. И теоретические графики.
 
 пример работы после запуска gnuplot скрипта
 p = 0
-![DispPError(QPSK)](https://github.com/user-attachments/assets/2b3003b7-a429-4a6b-b25c-0bf772f73b5e)
+![DispPError(QPSK)](https://github.com/user-attachments/assets/c31a77a2-eefd-440e-9d79-fe9be9006c24)
 p = 1
-![DispPError(QAM16)](https://github.com/user-attachments/assets/9657ceb5-8c9c-4c37-802a-9a28584e1674)
+![DispPError(QAM16)](https://github.com/user-attachments/assets/8e96a25e-ee3e-485e-af12-09373ffa2c17)
 p = 2
-![DispPError(QAM64)](https://github.com/user-attachments/assets/c7fd20b9-1c49-4122-90ce-9279d1cbf1cf)
+![DispPError(QAM64)](https://github.com/user-attachments/assets/5c759249-6fd0-43f2-861b-e694b93a494a)
 p = 3
-![DispPError(QAM256)](https://github.com/user-attachments/assets/55e9b14c-5b3c-4a39-a86c-e0e6d23ad09a)
+![DispPError(QAM256)](https://github.com/user-attachments/assets/61b51f8c-e2b9-457a-b9f3-515e03073d8c)
+
