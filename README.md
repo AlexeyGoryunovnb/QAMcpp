@@ -104,3 +104,18 @@ p = 2
 p = 3
 ![DispPError(QAM256)](https://github.com/user-attachments/assets/61b51f8c-e2b9-457a-b9f3-515e03073d8c)
 
+# QAM_simple.cpp
+Эта программа является вариацией второй программы, отличие заключается в классе Channel.
+изменение заключается в том что при генерации шума в канале, использовалась одинаковая дисперсия, тепрь же используется одинаковое значение коэффициента сигнал-шум.
+К сожалению из-за того что дисперсия шума теперь различна для разных сигналов (меньше для сигналов ближе к центру, сильнее для сигналов дальше), то теоретические формулы верхней и нижней граници теперь не являются точными а лишь приблеженными 
+(для QPSK теоретическая формула остаётся точной, так как для QPSK все сигналы находятся на одинаковом растоянии от центра, следовательно дисперсия шума для всех сигналов одинакова).
+
+пример работы после запуска gnuplot скрипта
+p = 0
+<img width="700" height="500" alt="DispPError" src="https://github.com/user-attachments/assets/e7c70086-0a98-4db7-9076-2a55ac9af923" />
+p = 1
+<img width="700" height="500" alt="DispPError" src="https://github.com/user-attachments/assets/83e73a32-a785-4721-afe6-1396dc1b1627" />
+p = 2
+<img width="700" height="500" alt="DispPError" src="https://github.com/user-attachments/assets/02b740ba-a668-433e-976c-707808929a6c" />
+p = 3
+<img width="700" height="500" alt="DispPError" src="https://github.com/user-attachments/assets/57586c90-34e2-4136-a77f-a6429ee4e078" />
